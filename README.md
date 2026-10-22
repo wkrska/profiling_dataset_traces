@@ -30,26 +30,31 @@ pip install pyarrow duckdb pandas numpy scipy matplotlib seaborn
 We provide an automated script [`download_data.sh`](./download_data.sh) to retrieve the datasets directly to target storage (default `/mnt/hdd0/database_data`):
 
 ```bash
-# Option A: Download the 6 pre-generated 1M-row x 20-col synthetic benchmarks (~1.1 GB)
+# Option A: Download all 7 target benchmark & real-world datasets (~22 GB compressed)
+./download_data.sh /mnt/hdd0/database_data --targets
+
+# Option B: Download the 6 pre-generated 1M-row x 20-col synthetic benchmarks (~1.1 GB)
 ./download_data.sh /mnt/hdd0/database_data --benchmarks
 
-# Option B: Download the full real-world raw dataset archive (~19.4 GB compressed)
+# Option C: Download the full real-world raw dataset archive (~19.4 GB compressed)
 ./download_data.sh /mnt/hdd0/database_data --raw
 
-# Option C: Download benchmarks, raw archive, and clone the OpenFormat generator submodule
+# Option D: Download benchmarks, raw archive, 7 targets, and clone the OpenFormat generator submodule
 ./download_data.sh /mnt/hdd0/database_data --all
 ```
 
-### Dataset Structure
-* **Synthetic Workloads (`openformat_benchmarks/`)**:
-  * `core_r1000000_c20.csv`: Hybrid mix (50% BI, 21% Classic, 7% Geo, 7% Log, 15% ML)
-  * `bi_r1000000_c20.csv`: Business intelligence reporting
-  * `classic_r1000000_c20.csv`: Traditional relational long-tail data (Yelp, IMDb)
-  * `geo_r1000000_c20.csv`: Geospatial coordinates and locations (Geonames, Cell Towers)
-  * `log_r1000000_c20.csv`: System and server logs (EDGAR, ClickHouse)
-  * `ml_r1000000_c20.csv`: Machine learning dense tabular numerical data (UCI-ML)
-* **Real-World Survey (`raw_datasets/` / `feature_olap.csv`)**:
-  * 2,845 columns across 206 tables surveyed across Public BI Benchmark (CWI/Tableau), ClickHouse sample datasets, Yelp Open Dataset, SEC EDGAR search logs, Geonames, and IMDb.
+### Profiled Benchmark & Real-World Datasets
+| Dataset | Domain | Total Records ($N$) | Columns | Format | Key Column Properties |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **ClickBench Hits** | Web Analytics / AdTech | 99,997,497 | 105 | Parquet | Heavy Zipfian skew ($s_{\text{median}}=2.24$), high sortedness (0.93), low NDV ratio ($f_{cr} < 0.001$) |
+| **NYC Yellow Taxi** | Spatiotemporal / Trips | 3,066,766 | 19 | Parquet | Gentle Zipf ($s_{\text{median}}=1.50$), temporal ordering, clustered pick-up/drop-off locations |
+| **FineWeb-Edu** | Unstructured Text / NLP | 726,000 | 10 | Parquet | High unique cardinality ($f_{cr}=0.24$), near-uniform text distributions ($s=0.26$) |
+| **GitHub Event Logs** | Deeply Nested Event Logs | 161,519 | 8 | JSON Gzip | High distinct ratios ($f_{cr}=0.20$), power-law active repos/actors ($s=0.80$) |
+| **OpenAQ** | IoT Sensor Time-Series | 3,046 | 9 | CSV Gzip | Strictly chronological ($f_{\text{sort}}=0.96$), uniform measurements ($s=0.04$) |
+| **LAION-2B** | Multimodal / Embeddings | 5,329,780 | 10 | Parquet | Ultra-high NDV ratio ($f_{cr}=0.67$), uniform/shuffled layout ($f_{\text{sort}}=0.50$) |
+| **FormatEvalData (ML / Menu)** | Relational / Tabular ML | 3.3M+ | 19 | CSV / bz2 | Long-tail relational properties ($s=0.92-1.19$), low NDV ratio ($f_{cr} \approx 0.001$) |
+| **OpenFormat Benchmarks** | Synthetic Microbenchmarks | 1,000,000 × 6 | 120 | CSV | Synthetic control suites (`core`, `bi`, `classic`, `geo`, `log`, `ml`) matching Table 4 |
+| **Zeng et al. Survey** | Comprehensive Survey | 206 tables | 2,845 | Various | Baseline survey from Zeng et al. (PVLDB 2023) across 2,845 columns |
 
 ---
 
