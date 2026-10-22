@@ -96,7 +96,15 @@ def profile_column(col_series: pd.Series) -> dict:
         "zipf_s_skew": round(zipf_s, 4)
     }
 
-def profile_dataset(file_path: str):
+import argparse
+
+DEFAULT_RESULTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "results")
+
+def profile_dataset(file_path: str, output_dir: str = None):
+    if output_dir is None:
+        output_dir = DEFAULT_RESULTS_DIR
+    os.makedirs(output_dir, exist_ok=True)
+
     # Support parquet, compressed json, csv, and tsv
     if file_path.endswith((".json", ".json.gz")):
         try:
@@ -130,20 +138,23 @@ def profile_dataset(file_path: str):
 
     out_df = pd.DataFrame(results).T
     
-    # Save results directly to script directory
-    script_dir = "/home/wkrska/Aggregation/profiling_dataset_traces"
-    os.makedirs(script_dir, exist_ok=True)
+    # Save results to specified output directory
     base_name = os.path.basename(file_path).split('.')[0]
-    out_path = os.path.join(script_dir, f"{base_name}_profile.csv")
+    out_path = os.path.join(output_dir, f"{base_name}_profile.csv")
     out_df.to_csv(out_path)
     print(f"Results saved to: {out_path}")
     return out_df
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Usage: python profile_dataset.py <path_to_data_file>")
-        sys.exit(1)
-        
-    data_file = sys.argv[1]
-    profile_df = profile_dataset(data_file)
+    parser = argparse.ArgumentParser(description="Profile column properties and Zipfian skew from tabular data.")
+    parser.add_argument("data_file", help="Path to input data file (parquet, csv, json.gz, etc.)")
+    parser.add_argument("-o", "--out-dir", dest="out_dir", default=None,
+                        help=f"Directory to save output CSV profile (default: {DEFAULT_RESULTS_DIR})")
+    parser.add_argument("pos_out_dir", nargs="?", default=None,
+                        help="Optional positional output directory for backward compatibility")
+
+    args = parser.parse_args()
+    target_out_dir = args.out_dir or args.pos_out_dir or DEFAULT_RESULTS_DIR
+
+    profile_df = profile_dataset(args.data_file, output_dir=target_out_dir)
     print(profile_df.to_string())

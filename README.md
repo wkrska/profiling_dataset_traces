@@ -60,11 +60,17 @@ We provide an automated script [`download_data.sh`](./download_data.sh) to retri
 
 ## 3. Profiling Tool (`profile_dataset.py`)
 
-[`profile_dataset.py`](./profile_dataset.py) profiles any tabular data file (Parquet, CSV, TSV) and calculates the core properties defined in Section 4 of Zeng et al.
+[`profile_dataset.py`](./profile_dataset.py) profiles any tabular data file (Parquet, CSV, TSV, JSON lines) and calculates the core properties defined in Section 4 of Zeng et al.
+
+By default, output profile CSV traces are saved to the [`results/`](./results/) directory.
 
 ### Usage
 ```bash
+# Export to default directory (results/)
 python3 profile_dataset.py <path_to_data_file>
+
+# Or specify a custom destination directory
+python3 profile_dataset.py <path_to_data_file> -o <output_directory>
 ```
 
 Example:

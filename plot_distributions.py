@@ -70,8 +70,9 @@ def load_data():
         print(f"Loaded {len(standard_real)} columns from feature_olap.csv")
 
     # 2. Benchmarks profiled (benchmark_profiles.csv)
-    bench_path = "benchmark_profiles.csv"
-    if os.path.exists(bench_path):
+    bench_candidates = ["results/benchmark_profiles.csv", "benchmark_profiles.csv"]
+    bench_path = next((p for p in bench_candidates if os.path.exists(p)), None)
+    if bench_path:
         df_bench = pd.read_csv(bench_path)
         standard_bench = pd.DataFrame({
             "source": "OpenFormat Benchmarks",
@@ -82,11 +83,20 @@ def load_data():
             "skew": df_bench["zipf_s_skew"]
         })
         dfs.append(standard_bench)
-        print(f"Loaded {len(standard_bench)} benchmark columns from benchmark_profiles.csv")
+        print(f"Loaded {len(standard_bench)} benchmark columns from {bench_path}")
 
     # 3. New individual dataset profile traces (*_profile.csv)
-    new_profiles = sorted(glob.glob("*_profile.csv"))
-    for p in new_profiles:
+    profile_patterns = ["results/*_profile.csv", "*_profile.csv"]
+    seen_bases = set()
+    found_profiles = []
+    for pat in profile_patterns:
+        for p in sorted(glob.glob(pat)):
+            base = os.path.basename(p).replace("_profile.csv", "")
+            if base not in seen_bases:
+                seen_bases.add(base)
+                found_profiles.append(p)
+
+    for p in found_profiles:
         base = os.path.basename(p).replace("_profile.csv", "")
         df_new = pd.read_csv(p)
         total_rows = RECORD_COUNTS.get(base, 1000000)
