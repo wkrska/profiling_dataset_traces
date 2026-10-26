@@ -1,0 +1,10 @@
+dataset,column,dtype,total_records,num_windows,window_size,total_cardinality,min_cardinality,max_cardinality,mean_cardinality,std_cardinality,cardinality_cv,cardinality_drift_range,cardinality_saturation_ratio,initial_skew,final_skew,min_skew,max_skew,mean_skew,std_skew,skew_drift_range,max_step_skew_drift,mean_step_skew_drift,skew_regime_shifts,regimes_visited,mean_new_values_ratio,mean_jaccard_overlap,mean_js_divergence
+openaq_2023,location_id,int64,3046,7,435,1,1,1,1.0,0.0,0.0,0,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0,Uniform,0.1429,1.0,0.0
+openaq_2023,sensors_id,int64,3046,7,435,5,3,5,4.71,0.7,0.1485,2,1.0,0.18,0.952,0.131,0.952,0.2893,0.2714,0.821,0.7485,0.1512,0,Gentle Zipf,0.1429,0.9333,0.1546
+openaq_2023,location,object,3046,7,435,1,1,1,1.0,0.0,0.0,0,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0,Uniform,0.1429,1.0,0.0
+openaq_2023,datetime,"datetime64[s, UTC]",3046,7,435,643,24,139,110.14,35.86,0.3256,115,0.1866,0.1423,0.2987,0.1223,0.2987,0.173,0.0595,0.1764,0.1743,0.0784,0,Gentle Zipf,0.7383,0.1088,0.9396
+openaq_2023,lat,float64,3046,7,435,1,1,1,1.0,0.0,0.0,0,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0,Uniform,0.1429,1.0,0.0
+openaq_2023,lon,float64,3046,7,435,1,1,1,1.0,0.0,0.0,0,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0,Uniform,0.1429,1.0,0.0
+openaq_2023,parameter,object,3046,7,435,5,3,5,4.71,0.7,0.1485,2,1.0,0.18,0.952,0.131,0.952,0.2893,0.2714,0.821,0.7485,0.1512,0,Gentle Zipf,0.1429,0.9333,0.1546
+openaq_2023,units,object,3046,7,435,2,1,2,1.86,0.35,0.1884,1,1.0,1.663,0.0,0.0,2.0732,1.6156,0.676,2.0732,1.9642,0.5812,5,Gentle Zipf -> Hotspot -> Uniform,0.1429,0.9167,0.0859
+openaq_2023,value,float64,3046,7,435,348,24,169,131.14,45.79,0.3492,145,0.408,1.0099,1.2357,0.9518,1.2357,1.0474,0.0866,0.2839,0.2838,0.0879,0,Gentle Zipf,0.333,0.3462,0.5324

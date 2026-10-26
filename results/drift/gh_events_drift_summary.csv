@@ -1,0 +1,9 @@
+dataset,column,dtype,total_records,num_windows,window_size,total_cardinality,min_cardinality,max_cardinality,mean_cardinality,std_cardinality,cardinality_cv,cardinality_drift_range,cardinality_saturation_ratio,initial_skew,final_skew,min_skew,max_skew,mean_skew,std_skew,skew_drift_range,max_step_skew_drift,mean_step_skew_drift,skew_regime_shifts,regimes_visited,mean_new_values_ratio,mean_jaccard_overlap,mean_js_divergence
+gh_events,id,int64,161519,11,14683,161519,11519,15000,14683.55,1000.72,0.0682,3481,0.0929,0.0066,0.006,0.006,0.0066,0.0065,0.0002,0.0006,0.0006,0.0001,0,Uniform,1.0,0.0,1.0
+gh_events,type,object,161519,11,14683,15,15,15,15.0,0.0,0.0,0,1.0,1.193,1.3969,1.193,1.4967,1.4118,0.0886,0.3037,0.1627,0.0454,0,Gentle Zipf,0.0909,1.0,0.0416
+gh_events,actor,object,161519,11,14683,30831,3859,4934,4512.0,383.6,0.085,1075,0.1252,1.5976,1.3133,1.2831,1.5976,1.3517,0.0943,0.3145,0.1412,0.0416,0,Gentle Zipf,0.6289,0.1392,0.6109
+gh_events,repo,object,161519,11,14683,62705,6393,8840,7888.18,746.43,0.0946,2447,0.102,0.6317,0.638,0.5263,0.6768,0.6175,0.0473,0.1505,0.0912,0.0419,0,Gentle Zipf,0.725,0.0911,0.876
+gh_events,payload,object,161519,11,14683,136427,9760,13223,12595.18,904.13,0.0718,3463,0.0969,0.7446,0.8413,0.7446,0.8476,0.8236,0.0267,0.103,0.0735,0.0144,0,Gentle Zipf,0.9845,0.0046,0.9264
+gh_events,public,bool,161519,11,14683,1,1,1,1.0,0.0,0.0,0,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0,Uniform,0.0909,1.0,0.0
+gh_events,created_at,"datetime64[ns, UTC]",161519,11,14683,3599,272,371,335.36,31.46,0.0938,99,0.0756,0.1812,0.1697,0.1495,0.1812,0.1616,0.0107,0.0317,0.0216,0.009,0,Gentle Zipf,0.9757,0.0089,0.9989
+gh_events,org,object,161519,11,14683,5567,764,991,933.27,65.83,0.0705,227,0.1622,2.8011,3.5528,2.8011,3.6575,3.3734,0.2111,0.8564,0.6265,0.1565,0,Hotspot,0.5442,0.1662,0.3085

@@ -139,3 +139,50 @@ Three separate 2D pairwise spaces comparing Total Records, Cardinality, and Zipf
    * Evaluates whether data scale influences value skewness, annotated with the Uniform ($s \le 0.01$) and Gentle Zipf ($s = 2.0$) boundaries.
 3. **Cardinality vs Skew** ([`figures/scatter_cardinality_vs_skew.png`](./figures/scatter_cardinality_vs_skew.png)):
    * Highlights how extreme skew ($s > 2$) is concentrated in categorical columns, while high-cardinality columns settle toward moderate Zipfian long tails ($s \approx 0.8 - 1.5$).
+
+---
+
+## 5. Windowed Distribution Drift Analysis (`profile_drift.py`)
+
+[`profile_drift.py`](./profile_drift.py) analyzes the dynamic evolution of column properties across sliding or tumbling windows. Real-world datasets exhibit substantial temporal, spatial, and sequence drift, whereas synthetic benchmarks often maintain static i.i.d. distributions.
+
+### Usage
+```bash
+# Profile drift on a single dataset with a specified window size
+python3 profile_drift.py /mnt/hdd0/database_data/nyc_taxi_2023_01.parquet -w 200000
+
+# Or partition into a fixed number of windows (e.g. 20 uniform windows)
+python3 profile_drift.py /mnt/hdd0/database_data/gh_events.json.gz -k 20
+
+# Run batch drift profiling across all target datasets
+python3 profile_drift.py --targets --data-dir /mnt/hdd0/database_data -o results/drift
+```
+
+### Metrics Tracked per Window ($W_k$)
+* **Local Cardinality ($C_w$) & NDV Ratio ($f_{cr, w}$)**: Distinct non-null count and ratio within window $W_k$.
+* **Cumulative Cardinality ($C_{\le k}$)**: Total distinct non-null values observed from window 0 through $k$.
+* **Novelty Ratio**: Fraction of window distinct values appearing for the very first time ($\frac{|V_k \setminus \bigcup_{j < k} V_j|}{C_w}$).
+* **Jaccard Overlap**: Key vocabulary overlap with immediate predecessor ($\frac{|V_k \cap V_{k-1}|}{|V_k \cup V_{k-1}|}$).
+* **Zipfian Skew ($s_w$) & Step Delta ($\Delta s_k = s_k - s_{k-1}$)**: Fitted Zipfian skew and step-by-step drift.
+* **Jensen-Shannon Divergence ($D_{JS}(P_k \parallel P_{k-1})$)**: Divergence between adjacent window probability distributions.
+* **Regime Transitions**: Transitions across Uniform ($s \le 0.01$), Gentle Zipf ($0.01 < s \le 2.0$), and Hotspot ($s > 2.0$).
+
+### Visualizations (`plot_drift.py` & `generate_figures.sh`)
+You can generate all figures (distribution overviews and windowed drift plots) using the unified script:
+
+```bash
+# Generate all figures (static distributions + windowed drift)
+./generate_figures.sh
+
+# Or generate specific subsets:
+./generate_figures.sh --dist   # Static distribution histograms and 2D scatter plots only
+./generate_figures.sh --drift  # Windowed drift plots only
+```
+
+Output plots in [`figures/drift/`](./figures/drift/):
+* **Trajectories** (`drift_trajectories_<dataset>.png`): Dual-panel timeline of Zipfian skew $s(w)$ and local cardinality $C(w)$.
+* **Cardinality Saturation** (`cardinality_growth_curves.png`): Normalized cumulative growth ($C_{\le w} / C_{\text{total}}$) comparing closed vs open domains.
+* **Skew Volatility** (`skew_drift_comparison.png`): Comparative drift range ($\Delta s = s_{\max} - s_{\min}$) contrasting real-world vs synthetic data.
+* **2D Drift Phase Space** (`drift_phase_space.png`): $\text{CV}_C$ vs $\Delta s$ mapping columns into Static, Skew-Drifting, Cardinality-Drifting, and Dual-Drifting quadrants.
+* **Regime Transitions** (`regime_transitions.png`): Breakdown of columns exhibiting skew regime transitions.
+
